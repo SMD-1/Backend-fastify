@@ -10,7 +10,6 @@ const loginUserSchema = {
   body: {
     type: "object",
     properties: {},
-    required: ["module_id"],
   },
   additionalProperties: false,
   security: [{ ApiToken: [] }, { StaticToken: [] }],

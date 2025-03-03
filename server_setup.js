@@ -22,7 +22,6 @@ async function serverSetup(swaggerURL) {
   app.register(swaggerUI, {
     routePrefix: swaggerURL + "swagger/public/documentation",
   });
-  console.log("=========", swaggerConfig(swaggerURL));
   await ajvCompiler(app, {});
 
   return app;
