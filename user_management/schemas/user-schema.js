@@ -1,4 +1,4 @@
-const { errorSchemas } = require("../../core/qpf_schema");
+const { errorSchemas } = require("../../core/schema_validation");
 
 const modelName = "User Management";
 

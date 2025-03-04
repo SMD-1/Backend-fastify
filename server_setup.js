@@ -3,7 +3,6 @@ const cors = require("@fastify/cors");
 const helmet = require("@fastify/helmet");
 const swagger = require("@fastify/swagger");
 const swaggerUI = require("@fastify/swagger-ui");
-const underPressure = require("@fastify/under-pressure");
 const Ajv = require("ajv");
 const AjvErrors = require("ajv-errors");
 const addFormats = require("ajv-formats");
