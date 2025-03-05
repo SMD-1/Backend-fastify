@@ -4,7 +4,7 @@ const { serverSetup } = require("./server_setup");
 const fs = require("fs");
 const path = require("path");
 const { APP_DB_CONFIG } = require("./core/config");
-const { knexClientCreate } = require("./core/knex_config");
+const { knexClientCreate } = require("./core/config/knex_config");
 const PORT = 3000;
 
 const urlPrefix = "/users";
