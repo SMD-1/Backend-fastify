@@ -12,7 +12,7 @@ require("dotenv").config();
 async function GET_USERS(request, reply) {
   try {
     const response = await getUsers(this);
-    reply.code(200).send(response);
+    return reply.code(200).send(response);
   } catch (error) {
     console.error("Something went Wrong!", error);
   }
@@ -36,7 +36,7 @@ async function CREATE_USER(request, reply) {
     if (userCreateResponse.name == "error") {
       console.log("Error occured while creating user");
     }
-    reply.code(200).send(userCreateResponse);
+    return reply.code(200).send(userCreateResponse);
   } catch (error) {
     console.error("Something went Wrong!", error);
   }
@@ -78,12 +78,12 @@ async function LOGIN_USER(request, reply) {
 
 async function GENERATE_LOGIN_CODE(request, reply) {
   try {
-    const token = request.token;
+    const token = request.body.token;
     // const validateAndUserData = validateToken(token)
     const code = generateUniqueCode();
     storeData(code, token, 360);
     await retrieveData(code);
-    reply.code(200).send(code);
+    return reply.code(200).send(code);
   } catch (error) {
     console.error("Something went Wrong!", error);
   }
@@ -94,12 +94,12 @@ async function LOGIN_WITH_CODE(request, reply) {
     const loginCode = request.params.code;
     const cachedData = await retrieveData(loginCode);
     if (!cachedData) {
-      reply.send({
+      return reply.send({
         status: "failed",
         message: "Invalid code or code has been expired",
       });
     }
-    reply.send({
+    return reply.send({
       status: "success",
       token: cachedData,
     });

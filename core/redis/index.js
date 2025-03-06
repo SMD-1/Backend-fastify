@@ -20,13 +20,11 @@ function retrieveData(key) {
   return redis.get(key, (err, result) => {
     if (err) {
       console.error("Error retrieving data:", err);
+    } else if (result === null) {
+      console.log("Data not found or expired.");
     } else {
-      if (result === null) {
-        console.log("Data not found or expired.");
-      } else {
-        console.log(`Data retrieved: ${result}`);
-        return result;
-      }
+      console.log(`Data retrieved: ${result}`);
+      return result;
     }
   });
 }
