@@ -2,7 +2,7 @@ const publicDBSchema = "public.";
 
 const TABLES = {
   TEST_PERSONS: publicDBSchema + "persons",
-  USERS: publicDBSchema + "users",
+  TABLE_USERS: publicDBSchema + "users",
 };
 
 module.exports = {

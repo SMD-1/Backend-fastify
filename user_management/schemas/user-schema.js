@@ -69,13 +69,12 @@ const loginUserSchema = {
   body: {
     type: "object",
     properties: {
-      username: {
+      email: {
         type: "string",
-        minLength: 3,
-        maxLength: 255,
-        description: "Unique username for the user",
-        pattern: "^[a-zA-Z0-9_]+$", // Only alphanumeric characters and underscores allowed
-        example: "john_doe123",
+        format: "email", // Validates the email format
+        pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$", // Regex to validate email
+        description: "User's email address (unique)",
+        example: "john.doe@example.com",
       },
       password: {
         type: "string",
@@ -84,7 +83,7 @@ const loginUserSchema = {
         example: "user_password123",
       },
     },
-    required: ["username", "password"], // Make username, password, and email required
+    required: ["email", "password"], // Make password, and email required
     additionalProperties: false,
   },
 };

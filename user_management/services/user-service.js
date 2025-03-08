@@ -8,8 +8,8 @@ const getUsers = async (app) => {
     return response.rows;
   } catch (error) {
     return {
-      message: "Error occured while fetching data.",
-      error: error,
+      message: error.message,
+      error: error.stack,
     };
   }
 };
@@ -22,26 +22,25 @@ const createUser = async (app, userDetails) => {
       .returning("*");
     return response;
   } catch (error) {
-    console.log(error);
     return {
-      message: "Error occured while fetching data.",
-      error: error,
+      message: error.message,
+      error: error.stack,
     };
   }
 };
 
-const getUserDetails = async (app, username) => {
+const getUserDetails = async (app, email) => {
   try {
-    const { USERS } = TABLES;
+    const { TABLE_USERS } = TABLES;
 
     const user = await app.knex.raw(
-      `select username, email, mobile, first_name, middle_name,password, last_name from ${USERS} where username = '${username}';`
+      `select username, email, mobile, first_name, middle_name,password, last_name from ${TABLE_USERS} where email = '${email}' and is_active = true;`
     );
-    return user.rows ? user.rows[0] : {};
+    return user.rows ? user.rows[0] : [];
   } catch (err) {
     return {
-      message: "Error occured while fetching data.",
-      error: err,
+      message: err.message,
+      error: err.stack,
     };
   }
 };

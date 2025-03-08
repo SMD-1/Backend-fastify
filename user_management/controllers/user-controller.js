@@ -33,24 +33,33 @@ async function CREATE_USER(request, reply) {
     };
 
     const userCreateResponse = await createUser(this, userDetails);
-    if (userCreateResponse.name == "error") {
-      console.log("Error occured while creating user");
+    if (userCreateResponse?.error) {
+      return reply.status(401).send({
+        message: userCreateResponse.message,
+        error: userCreateResponse.error,
+      });
     }
-    return reply.code(200).send(userCreateResponse);
+    return reply.code(200).send({ userCreateResponse, success: true });
   } catch (error) {
-    console.error("Something went Wrong!", error);
+    return reply
+      .status(500)
+      .send({ success: false, message: error.message, error: error.stack });
   }
 }
 
 async function LOGIN_USER(request, reply) {
   try {
-    const { username, password } = request.body;
+    const email = request.body.email;
+    const password = request.body.password;
     const JWT_SECRET = process.env.JWT_SECRET;
-    const user = await getUserDetails(this, username);
-    if (!user) {
+    const user = await getUserDetails(this, email);
+    if (user.length === 0) {
+      return reply.status(401).send({ message: "User not found", error: true });
+    }
+    if (user.error) {
       return reply
         .status(401)
-        .send({ message: "Username or password is incorrect" });
+        .send({ message: user.message, error: user.error });
     }
     const isMatch = await verifyPassword(password, user.password);
     if (!isMatch) {
@@ -70,9 +79,11 @@ async function LOGIN_USER(request, reply) {
       JWT_SECRET,
       { expiresIn: "1h" }
     );
-    return reply.code(200).send({ token });
+    return reply.code(200).send({ token: token, success: true });
   } catch (error) {
-    console.error("Something went Wrong!", error);
+    return reply
+      .status(500)
+      .send({ success: false, message: error.message, error: error.stack });
   }
 }
 
@@ -85,7 +96,9 @@ async function GENERATE_LOGIN_CODE(request, reply) {
     await retrieveData(code);
     return reply.code(200).send(code);
   } catch (error) {
-    console.error("Something went Wrong!", error);
+    return reply
+      .status(500)
+      .send({ success: false, message: error.message, error: error.stack });
   }
 }
 
@@ -95,7 +108,7 @@ async function LOGIN_WITH_CODE(request, reply) {
     const cachedData = await retrieveData(loginCode);
     if (!cachedData) {
       return reply.send({
-        status: "failed",
+        status: false,
         message: "Invalid code or code has been expired",
       });
     }
@@ -104,7 +117,9 @@ async function LOGIN_WITH_CODE(request, reply) {
       token: cachedData,
     });
   } catch (error) {
-    console.error("Something went Wrong!", error);
+    return reply
+      .status(500)
+      .send({ success: false, message: error.message, error: error.stack });
   }
 }
 
