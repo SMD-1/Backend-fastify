@@ -54,18 +54,20 @@ async function LOGIN_USER(request, reply) {
     const JWT_SECRET = process.env.JWT_SECRET;
     const user = await getUserDetails(this, email);
     if (user.length === 0) {
-      return reply.status(401).send({ message: "User not found", error: true });
+      return reply
+        .status(401)
+        .send({ message: "User not found", success: false });
     }
     if (user.error) {
       return reply
         .status(401)
-        .send({ message: user.message, error: user.error });
+        .send({ success: false, message: user.message, error: user.error });
     }
     const isMatch = await verifyPassword(password, user.password);
     if (!isMatch) {
       return reply
         .status(401)
-        .send({ message: "Username or password is incorrect" });
+        .send({ success: false, message: "Username or password is incorrect" });
     }
 
     const token = jwt.sign(

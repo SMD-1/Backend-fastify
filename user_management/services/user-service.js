@@ -36,7 +36,7 @@ const getUserDetails = async (app, email) => {
     const user = await app.knex.raw(
       `select username, email, mobile, first_name, middle_name,password, last_name from ${TABLE_USERS} where email = '${email}' and is_active = true;`
     );
-    return user.rows ? user.rows[0] : [];
+    return user.rows.length ? user.rows[0] : [];
   } catch (err) {
     return {
       message: err.message,
